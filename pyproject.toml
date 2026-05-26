@@ -7,7 +7,7 @@ name = "x402-anthropic"
 dynamic = ["version"]
 description = "x402 payment transport for the Anthropic Python SDK"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 keywords = ["anthropic", "x402", "payments", "http402", "claude"]
 classifiers = [
@@ -15,7 +15,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
