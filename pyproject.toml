@@ -29,6 +29,7 @@ dependencies = [
 [project.optional-dependencies]
 evm = ["x402[evm]"]
 svm = ["x402[svm]"]
+all = ["x402[evm]", "x402[svm]"]
 dev = ["pytest>=8.0", "respx>=0.21"]
 
 [project.urls]

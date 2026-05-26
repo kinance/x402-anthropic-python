@@ -3,6 +3,7 @@
 ![PyPI](https://img.shields.io/pypi/v/x402-anthropic)
 ![Python](https://img.shields.io/pypi/pyversions/x402-anthropic)
 ![License](https://img.shields.io/pypi/l/x402-anthropic)
+![CI](https://github.com/kinance/x402-anthropic-python/actions/workflows/python.yml/badge.svg)
 
 x402 payment transport for the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python).
 
@@ -13,6 +14,7 @@ Server returns 402 → client signs a USDC authorization → retries with paymen
 ```bash
 pip install "x402-anthropic[evm]"   # EVM (Base, Ethereum)
 pip install "x402-anthropic[svm]"   # SVM (Solana)
+pip install "x402-anthropic[all]"   # all chains
 ```
 
 ## Usage

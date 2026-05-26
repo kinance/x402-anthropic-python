@@ -1,6 +1,6 @@
 """x402 payment wrapper for the Anthropic Python SDK."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from ._client import X402Anthropic, AsyncX402Anthropic
 from ._errors import X402PaymentError
