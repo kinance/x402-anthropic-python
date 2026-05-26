@@ -1,5 +1,9 @@
 # x402-anthropic-python
 
+![PyPI](https://img.shields.io/pypi/v/x402-anthropic)
+![Python](https://img.shields.io/pypi/pyversions/x402-anthropic)
+![License](https://img.shields.io/pypi/l/x402-anthropic)
+
 x402 payment transport for the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python).
 
 Server returns 402 → client signs a USDC authorization → retries with payment header. Your code doesn't change. Follows the pattern introduced by [qntx/x402-openai-python](https://github.com/qntx/x402-openai-python).
