@@ -1,14 +1,15 @@
 """Streaming usage example."""
 
 import asyncio
+import os
 from x402_anthropic import AsyncX402Anthropic, EVMWallet
 
 
 async def main() -> None:
-    wallet = EVMWallet(private_key="0x_YOUR_PRIVATE_KEY")
+    wallet = EVMWallet(private_key=os.environ["EVM_PRIVATE_KEY"])
     async with AsyncX402Anthropic(
         wallet=wallet,
-        base_url="https://your-x402-gateway.example.com",
+        base_url=os.environ.get("X402_BASE_URL", "https://your-x402-gateway.example.com"),
     ) as client:
         async with client.messages.stream(
             model="claude-opus-4-5",
