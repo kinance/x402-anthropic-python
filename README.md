@@ -7,9 +7,8 @@ Server returns 402 → client signs a USDC authorization → retries with paymen
 ## Install
 
 ```bash
-pip install x402-anthropic           # base
-pip install "x402-anthropic[evm]"    # + Base/Ethereum
-pip install "x402-anthropic[svm]"    # + Solana
+pip install "x402-anthropic[evm]"   # EVM (Base, Ethereum)
+pip install "x402-anthropic[svm]"   # SVM (Solana)
 ```
 
 ## Usage
