@@ -8,6 +8,7 @@ import anthropic
 
 from ._transport import X402Transport, AsyncX402Transport
 from ._wallet import Wallet
+from x402.client_base import PaymentPolicy
 
 
 class X402Anthropic(anthropic.Anthropic):
@@ -23,7 +24,7 @@ class X402Anthropic(anthropic.Anthropic):
         msg = client.messages.create(model="claude-opus-4-5", max_tokens=1024, messages=[...])
     """
 
-    def __init__(self, wallet: Wallet, policies: list | None = None, **kwargs: object) -> None:
+    def __init__(self, wallet: Wallet, policies: list[PaymentPolicy] | None = None, **kwargs: object) -> None:
         x402_http = wallet.build_sync(policies=policies)
         inner = httpx.HTTPTransport()
         transport = X402Transport(x402_http, inner)
@@ -50,7 +51,7 @@ class _LazyAsyncX402Transport(httpx.AsyncBaseTransport):
     client on first request, then delegates all subsequent calls to it.
     """
 
-    def __init__(self, wallet: Wallet, policies: list | None, inner: httpx.AsyncBaseTransport) -> None:
+    def __init__(self, wallet: Wallet, policies: list[PaymentPolicy] | None, inner: httpx.AsyncBaseTransport) -> None:
         self._wallet = wallet
         self._policies = policies
         self._inner = inner
@@ -66,7 +67,10 @@ class _LazyAsyncX402Transport(httpx.AsyncBaseTransport):
         return await self._transport.handle_async_request(request)
 
     async def aclose(self) -> None:
-        await self._inner.aclose()
+        if self._transport is not None:
+            await self._transport.aclose()
+        else:
+            await self._inner.aclose()
 
 
 class AsyncX402Anthropic(anthropic.AsyncAnthropic):
@@ -94,7 +98,7 @@ class AsyncX402Anthropic(anthropic.AsyncAnthropic):
         asyncio.run(main())
     """
 
-    def __init__(self, wallet: Wallet, policies: list | None = None, **kwargs: object) -> None:
+    def __init__(self, wallet: Wallet, policies: list[PaymentPolicy] | None = None, **kwargs: object) -> None:
         inner = httpx.AsyncHTTPTransport()
         self._lazy_transport = _LazyAsyncX402Transport(wallet, policies, inner)
         self._x402_http_client = httpx.AsyncClient(transport=self._lazy_transport)

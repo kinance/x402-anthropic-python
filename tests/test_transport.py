@@ -233,3 +233,31 @@ class TestEVMWallet:
         v2 = _v2_networks(client.get_registered_schemes())
         assert "eip155:8453" in v2
         assert "eip155:*" not in v2
+
+    def test_build_sync_registers_policies(self):
+        from unittest.mock import patch, MagicMock
+        from x402_anthropic._wallet import EVMWallet
+
+        wallet = EVMWallet("0x" + "aa" * 32)
+        policy1 = MagicMock()
+        policy2 = MagicMock()
+
+        with patch("x402_anthropic._wallet.x402ClientSync") as MockClient:
+            mock_client = MockClient.return_value
+            wallet.build_sync(policies=[policy1, policy2])
+
+        assert mock_client.register_policy.call_count == 2
+        mock_client.register_policy.assert_any_call(policy1)
+        mock_client.register_policy.assert_any_call(policy2)
+
+    def test_build_sync_no_policies_does_not_call_register_policy(self):
+        from unittest.mock import patch
+        from x402_anthropic._wallet import EVMWallet
+
+        wallet = EVMWallet("0x" + "aa" * 32)
+
+        with patch("x402_anthropic._wallet.x402ClientSync") as MockClient:
+            mock_client = MockClient.return_value
+            wallet.build_sync(policies=None)
+
+        mock_client.register_policy.assert_not_called()

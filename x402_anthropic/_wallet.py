@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from x402 import x402ClientSync, x402Client
 from x402.http import x402HTTPClientSync, x402HTTPClient
+from x402.client_base import PaymentPolicy
 
 
 class Wallet:
@@ -15,14 +16,14 @@ class Wallet:
     async def register_async(self, client: x402Client) -> None:
         raise NotImplementedError
 
-    def build_sync(self, policies: list | None = None) -> x402HTTPClientSync:
+    def build_sync(self, policies: list[PaymentPolicy] | None = None) -> x402HTTPClientSync:
         c = x402ClientSync()
         self.register_sync(c)
         for policy in (policies or []):
             c.register_policy(policy)
         return x402HTTPClientSync(c)
 
-    async def build_async(self, policies: list | None = None) -> x402HTTPClient:
+    async def build_async(self, policies: list[PaymentPolicy] | None = None) -> x402HTTPClient:
         c = x402Client()
         await self.register_async(c)
         for policy in (policies or []):
