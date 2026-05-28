@@ -23,8 +23,8 @@ class X402Anthropic(anthropic.Anthropic):
         msg = client.messages.create(model="claude-opus-4-5", max_tokens=1024, messages=[...])
     """
 
-    def __init__(self, wallet: Wallet, **kwargs: object) -> None:
-        x402_http = wallet.build_sync()
+    def __init__(self, wallet: Wallet, policies: list | None = None, **kwargs: object) -> None:
+        x402_http = wallet.build_sync(policies=policies)
         inner = httpx.HTTPTransport()
         transport = X402Transport(x402_http, inner)
         self._x402_http_client = httpx.Client(transport=transport)
@@ -50,8 +50,9 @@ class _LazyAsyncX402Transport(httpx.AsyncBaseTransport):
     client on first request, then delegates all subsequent calls to it.
     """
 
-    def __init__(self, wallet: Wallet, inner: httpx.AsyncBaseTransport) -> None:
+    def __init__(self, wallet: Wallet, policies: list | None, inner: httpx.AsyncBaseTransport) -> None:
         self._wallet = wallet
+        self._policies = policies
         self._inner = inner
         self._transport: AsyncX402Transport | None = None
         self._lock = asyncio.Lock()
@@ -60,7 +61,7 @@ class _LazyAsyncX402Transport(httpx.AsyncBaseTransport):
         if self._transport is None:
             async with self._lock:
                 if self._transport is None:
-                    x402_http = await self._wallet.build_async()
+                    x402_http = await self._wallet.build_async(policies=self._policies)
                     self._transport = AsyncX402Transport(x402_http, self._inner)
         return await self._transport.handle_async_request(request)
 
@@ -93,9 +94,9 @@ class AsyncX402Anthropic(anthropic.AsyncAnthropic):
         asyncio.run(main())
     """
 
-    def __init__(self, wallet: Wallet, **kwargs: object) -> None:
+    def __init__(self, wallet: Wallet, policies: list | None = None, **kwargs: object) -> None:
         inner = httpx.AsyncHTTPTransport()
-        self._lazy_transport = _LazyAsyncX402Transport(wallet, inner)
+        self._lazy_transport = _LazyAsyncX402Transport(wallet, policies, inner)
         self._x402_http_client = httpx.AsyncClient(transport=self._lazy_transport)
         kwargs.setdefault("api_key", "x402")
         super().__init__(http_client=self._x402_http_client, **kwargs)

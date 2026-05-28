@@ -56,14 +56,16 @@ asyncio.run(main())
 ### Payment policies
 
 ```python
-from x402 import preferNetwork, maxAmount
+from x402 import prefer_network, max_amount
 
 client = X402Anthropic(
     wallet=wallet,
-    policies=[preferNetwork("eip155:8453"), maxAmount(1_000_000)],  # Base, max $1 USDC
+    policies=[prefer_network("eip155:8453"), max_amount(1_000_000)],  # Base, max $1 USDC
     base_url="...",
 )
 ```
+
+> **Safety**: use a dedicated wallet with limited funds and always set a `max_amount` policy before pointing this at an untrusted gateway.
 
 ## API reference
 
